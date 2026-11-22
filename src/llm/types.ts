@@ -1,4 +1,4 @@
-import {
+import type {
   ChatCompletion,
   ChatCompletionMessageParam,
   ChatCompletionTool,
@@ -10,9 +10,19 @@ export interface LLMChatOptions {
   maxTokens?: number;
 }
 
+export interface TokenEstimate {
+  inputTokens: number;
+  accuracy: "exact" | "approximate";
+}
+
 export interface LLMProvider {
   chat(
     messages: ChatCompletionMessageParam[],
     options?: LLMChatOptions,
   ): Promise<ChatCompletion>;
+
+  estimateTokens(
+    messages: ChatCompletionMessageParam[],
+    options?: LLMChatOptions,
+  ): Promise<TokenEstimate>;
 }

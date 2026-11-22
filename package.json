@@ -7,7 +7,8 @@
     "dev": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "test:planner": "tsx src/tests/test-planner.test.ts",
-    "test:cost": "tsx src/tests/test-cost.test.ts"
+    "test:cost": "tsx src/tests/test-cost.test.ts",
+    "test:cost-estimation": "tsx src/tests/test-cost-estimator.test"
   },
   "keywords": [],
   "author": "",
