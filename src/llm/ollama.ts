@@ -17,7 +17,7 @@ export class OllamaClient {
     this.client = new OpenAI({
       baseURL,
       apiKey: "ollama",
-      timeout: 120_000,
+      timeout: 900_000,
       maxRetries: 0,
     });
 
@@ -27,6 +27,7 @@ export class OllamaClient {
   async chat(
     messages: ChatCompletionMessageParam[],
     tools?: ChatCompletionTool[],
+    jsonMode = false,
   ): Promise<ChatCompletion> {
     return this.client.chat.completions.create({
       model: this.model,
@@ -34,8 +35,19 @@ export class OllamaClient {
       tools,
       tool_choice: tools ? "auto" : "none",
       temperature: 0.2,
-      max_tokens: 1024,
-      reasoning_effort: "low",
+      // reasoning_effort: "low",
+      ...(jsonMode
+        ? { response_format: { type: "json_object" as const } }
+        : {}),
     });
   }
 }
+
+// Создал, все круто. Я резместил тесты в test/test-panner.test.ts и выставил у ollama -
+// И увеличил количество задержки до 240 потому что падал по timeout
+//     this.client = new OpenAI({
+//       baseURL,
+//       apiKey: "ollama",
+//       timeout: 240_000,
+//       maxRetries: 0,
+//     });

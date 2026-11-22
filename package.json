@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:planner": "tsx src/tests/test-planner.test.ts",
+    "test:cost": "tsx src/tests/test-cost.test.ts"
   },
   "keywords": [],
   "author": "",
