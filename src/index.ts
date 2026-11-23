@@ -1,8 +1,9 @@
-
 import "dotenv/config";
 
 import { createInterface } from "node:readline/promises";
-import { Agent } from "./agent/agent.js";
+import { createLLMProvider } from "./llm/factory.js";
+import { Planner } from "./planner/planner.js";
+import { formatProjectPlan } from "./planner/formatter.js";
 
 async function main() {
   const terminal = createInterface({
@@ -10,9 +11,11 @@ async function main() {
     output: process.stdout,
   });
 
-  const agent = new Agent();
+  // Planner всегда использует Yandex.
+  const plannerLLM = createLLMProvider("yandex");
+  const planner = new Planner(plannerLLM);
 
-  console.log("Local Agent started!");
+  console.log("AI Planner started!");
   console.log("Введите exit для завершения.\n");
 
   try {
@@ -28,16 +31,18 @@ async function main() {
       }
 
       try {
-        const response = await agent.run(input);
+        const plan = await planner.generate(input);
 
-        console.log(`\nAgent: ${response}\n`);
+        console.log("\n========== PROJECT PLAN ==========");
+        console.log(formatProjectPlan(plan));
+        console.log("==================================\n");
       } catch (error) {
-        console.error("\nAgent error:", error);
+        console.error("\nPlanner error:", error);
       }
     }
   } finally {
     terminal.close();
-    console.log("Agent stopped.");
+    console.log("Planner stopped.");
   }
 }
 

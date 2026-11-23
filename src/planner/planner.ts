@@ -23,7 +23,7 @@ export class Planner {
     ];
     const response = await this.llm.chat(messages, {
       jsonMode: true,
-      maxTokens: 4000,
+      maxTokens: 8000,
     });
     const usage = adaptTokenUsage(response.usage);
 
@@ -41,7 +41,15 @@ export class Planner {
 
     try {
       parsed = JSON.parse(content);
-    } catch {
+    } catch (err) {
+      console.error("[Planner] JSON parsing failed:", err);
+      console.error(
+        "[Planner] Finish reason:",
+        response.choices[0]?.finish_reason,
+      );
+      console.error("[Planner] Response content:");
+      console.error(content);
+
       throw new Error("LLM returned invalid JSON");
     }
 
